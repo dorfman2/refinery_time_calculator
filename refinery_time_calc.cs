@@ -1,3 +1,5 @@
+// This is a basic framework I found online when searching for scripts. It is not my code, but thought it might be useful.
+
 void Main()
         {
             //Input your world speed in place of 1
