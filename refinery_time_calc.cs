@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using Sandbox.ModAPI.Ingame;
 using VRage.Game.ModAPI.Ingame;
+using VRage.Game.VisualScripting;
 
 namespace SpaceEngineersScripting2
 {
@@ -51,23 +52,47 @@ namespace SpaceEngineersScripting2
 
         public void Main(string argument, UpdateType updateSource)
         {
+            Dictionary<MyItemType, int> totalOreOnGrid = new Dictionary<MyItemType, int>();
+
             foreach (var cargoBlock in cargoBlockList)
             {
                 if (cargoBlock.InventoryCount >= 1)
                 {
                     IMyInventory inv = cargoBlock.GetInventory();
                     if (!inv.IsItemAt(0)) continue;
+                    //Echo($"{cargoBlock.EntityId} {inv.ItemCount}");
+
                     List<MyInventoryItem> itemList = new List<MyInventoryItem>();
                     inv.GetItems(itemList);
+
                     for (int i = 0; i < itemList.Count; i++)
                     {
+                        //var item = itemList[i];
+                        var key = itemList[i].Type;
+                        var value = (int)itemList[i].Amount;
+
                         // Create a dictionary of all ores. Dump the rest of the items.
-                        Echo($"Item is {itemList[i]}");
+                        if (totalOreOnGrid.ContainsKey(key))
+                        {
+                            totalOreOnGrid[key] += value;
+                        }
+                        else
+                        {
+                            totalOreOnGrid.Add(key, value);
+                        }
+
+                        //Echo($"Item is {itemList[i]}");
                     }
+
 
                 }
             }
 
+            //foreach (i in totalOreOnGrid.keys())
+            foreach (var i in totalOreOnGrid)
+            {
+                Echo($"Total:{i.Key.SubtypeId}, {i.Value} kgs.");
+            }
 
         }
 
